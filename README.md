@@ -1,32 +1,47 @@
 
-AI-Based Travel Itinerary App
-=============================
+# 🌍 Trippy AI – Smart Travel Itinerary App
 
-Welcome to the AI-Based Travel Itinerary App! This project allows users to create personalized travel itineraries based on their preferences like budget, location, and travel days. The app suggests day-wise activities, hotels, and provides comprehensive details using the Gemini API, Photos API, and Places API to gather and display information.
+Trippy AI is a full-stack web application that generates **personalized travel itineraries** using Google OAuth and AI-powered APIs. With inputs like location, budget, and duration, it provides day-wise plans, hotel recommendations, and activity suggestions.
 
-Features
---------
+Built with:
+- 🔥 React
+- ☁️ Firebase (Auth + Firestore)
+- 🤖 Gemini API
+- 🗺️ Google Places API & Photos API
+- 🎨 Tailwind CSS & Framer Motion
 
-- **Personalized Itineraries**: Customize itineraries based on your budget, location, and days.
-- **Hotel Recommendations**: Get a list of hotels based on your selected preferences.
-- **Day-Wise Activities**: Detailed day-wise plans that suggest places to visit, dine, and explore.
-- **AI Integration**: Uses AI-powered APIs (Gemini, Photos, and Places) to fetch real-time travel information and recommendations.
+---
 
-Project Setup
--------------
+## ✨ Features
 
-### Prerequisites
+- 🔐 **Google Login**: One-click secure login with Google OAuth.
+- 🧠 **AI-Powered Suggestions**: Smart day-wise plans based on user preferences.
+- 🏨 **Hotel Recommendations**: Fetches curated hotel suggestions.
+- 🗓️ **Day-Wise Activities**: Explore places to visit, eat, and relax.
+- 🖼️ **Photo Previews**: Location images powered by Google Photos API.
+- 📱 **Responsive UI**: Designed with Tailwind CSS + animated via Framer Motion.
+- 🔎 **Realtime Database**: User-specific data stored securely via Firebase Firestore.
 
-Make sure you have the following installed on your local machine:
+---
 
-- [Node.js](https://nodejs.org/) (v14 or later)
-- [npm](https://www.npmjs.com/) (v6 or later)
+## 🚀 Getting Started
+
+### ✅ Prerequisites
+
+Ensure these are installed:
+
+- [Node.js](https://nodejs.org/) v14 or later  
+- [npm](https://www.npmjs.com/)  
 - [Git](https://git-scm.com/)
 
-### 1. Clone the Repository
+---
+
+### 🔧 Installation Steps
+
+#### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/ai-travel-itinerary-app.git
+git clone https://github.com/yourusername/aitravel.git
 ```
 
 ### 2. Install Dependencies
@@ -34,7 +49,7 @@ git clone https://github.com/yourusername/ai-travel-itinerary-app.git
 Navigate to the project folder and install the dependencies:
 
 ```bash
-cd ai-travel-itinerary-app
+cd aitravel
 npm install
 ```
 
@@ -69,18 +84,16 @@ The app has been designed with the following principles in mind:
 - **Responsive Design**: The app is fully responsive and optimized for mobile and desktop views.
 - **Unit Testing**: Unit tests are written using Jest and React Testing Library to ensure the stability of the application.
 
-Contributing
-------------
-
-We welcome contributions to improve this project! To contribute:
-
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m 'Add new feature'`).
-4. Push to the branch (`git push origin feature-name`).
-5. Open a Pull Request.
-
-License
--------
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+```bash
+trippy-ai/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── App.js
+├── .env
+├── package.json
+└── README.md
+```
