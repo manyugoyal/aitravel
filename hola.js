@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "AIzaSyDEYoYidQ4EEVYxliPT9O_VEUW-6yxjeSE"; 
+const API_KEY = "AIzaSyArtrKSKkUhby9zmxSUP14pgsyOGs2V0R4"; 
 const url = `https://places.googleapis.com/v1/places:searchText?key=${API_KEY}`;
 
 const requestData = {
