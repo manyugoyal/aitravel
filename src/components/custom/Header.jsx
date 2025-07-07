@@ -70,7 +70,7 @@ function Header() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <img src="/logo4.png" alt="Logo" className="h-16 w-auto drop-shadow-md" />
+          <img src="/logo5.png" alt="Logo" className="h-16 w-auto drop-shadow-md" />
           <span className="text-xl font-bold bg-gradient-to-r from-teal-600 to-blue-600 bg-clip-text text-transparent hidden sm:block">
             AI Travel
           </span>
@@ -209,7 +209,7 @@ function Header() {
           </DialogHeader>
           <div className="flex flex-col items-center py-6 space-y-4">
             <motion.img
-              src="/logo4.png"
+              src="/logo5.png"
               alt="Logo"
               className="h-24 w-auto rounded-xl shadow-md"
               initial={{ scale: 0.9 }}

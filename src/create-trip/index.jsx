@@ -541,7 +541,7 @@ function CreateTrip() {
                 transition={{ delay: 0.2 }}
               >
                 <motion.img 
-                  src='/logo4.png' 
+                  src='/logo5.png' 
                   alt='Logo' 
                   className='w-40 h-40 rounded-xl shadow-md border border-gray-200' 
                   initial={{ scale: 0.8, opacity: 0 }} 
