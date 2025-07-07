@@ -1,3 +1,4 @@
+
 import { AI_PROMPTS, SelectBudgetOptions, SelectTravelsList } from "../constants/option";
 import { Input } from "../components/ui/input";
 import React, { useEffect } from "react";
