@@ -1,10 +1,9 @@
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
-
-const apiKey = "AIzaSyDaIOJr4hfiQ-sLzFcFKpSkFjrSzNrxMyA";
+const apiKey = import.meta.env.VITE_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-2.0-flash-exp",
+  model: "gemini-3.1-flash-lite", // Updated from "gemini-2.0-flash-exp"
 });
 
 const generationConfig = {
@@ -12,7 +11,7 @@ const generationConfig = {
   topP: 0.95,
   topK: 40,
   maxOutputTokens: 8192,
-  responseMimeType: "text/plain",
+  responseMimeType: "text/plain", // Keep it text/plain or application/json
 };
 //   generationConfig,
 //   history: [

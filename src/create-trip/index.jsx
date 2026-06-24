@@ -4,7 +4,6 @@ import { Input } from "../components/ui/input";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
-import GooglePlacesAutocomplete from "react-google-places-autocomplete";
 import { toast } from "sonner";
 import { chatSession } from "../service/AIModel";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/ui/dialog";
@@ -24,6 +23,8 @@ function CreateTrip() {
   const [openDialog, setOpenDialog] = useState(false);
   const [loading, setLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [query, setQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
@@ -31,6 +32,28 @@ function CreateTrip() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const searchLocation = async (value) => {
+    setQuery(value);
+
+    if (value.length < 3) {
+      setSuggestions([]);
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          value
+        )}`
+      );
+
+      const data = await res.json();
+      setSuggestions(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const login = useGoogleLogin({
@@ -225,34 +248,39 @@ function CreateTrip() {
                 <h3 className='text-2xl font-bold text-gray-800'>Where are you heading?</h3>
               </div>
               <div className='relative'>
-                <GooglePlacesAutocomplete
-                  apiKey='AIzaSyDMkZJSXUDbwzxjwQqek0S9-cxK_CRAIyg'
-                  selectProps={{
-                    place,
-                    onChange: (v) => {
-                      setPlace(v);
-                      handleInputChange("place", v);
-                    },
-                    placeholder: "Search destinations...",
-                    className: "w-full z-50",
-                    styles: {
-                      control: (provided) => ({
-                        ...provided,
-                        padding: "12px 16px",
-                        borderRadius: "12px",
-                        border: "1px solid #e5e7eb",
-                        boxShadow: "none",
-                        "&:hover": {
-                          borderColor: "#3b82f6",
-                        },
-                      }),
-                      input: (provided) => ({
-                        ...provided,
-                        fontSize: "16px",
-                      }),
-                    },
-                  }}
-                />
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => searchLocation(e.target.value)}
+                    placeholder="Search destinations..."
+                    className="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+
+                  {suggestions.length > 0 && (
+                    <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                      {suggestions.map((place) => (
+                        <div
+                          key={place.place_id}
+                          className="p-3 hover:bg-gray-100 cursor-pointer"
+                          onClick={() => {
+                            setQuery(place.display_name);
+
+                            handleInputChange("place", {
+                              label: place.display_name,
+                              lat: place.lat,
+                              lon: place.lon,
+                            });
+
+                            setSuggestions([]);
+                          }}
+                        >
+                          {place.display_name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <motion.div 
                   className='absolute -right-4 -bottom-4 text-blue-500 opacity-20' 
                   animate={{ rotate: 360 }} 
