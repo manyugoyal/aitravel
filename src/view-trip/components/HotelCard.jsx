@@ -8,7 +8,7 @@ function HotelCard({ item, index }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
-  const API_KEY = "AIzaSyDEYoYidQ4EEVYxliPT9O_VEUW-6yxjeSE";
+  const API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
   const MAX_RETRIES = 3;
 
   useEffect(() => {

@@ -12,7 +12,7 @@ function InfoSection({ trip }) {
   const [photos, setPhotos] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
-  const API_KEY = "AIzaSyDEYoYidQ4EEVYxliPT9O_VEUW-6yxjeSE";
+  const API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
 
   useEffect(() => {
     if (trip) {

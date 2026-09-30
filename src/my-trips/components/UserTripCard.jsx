@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 function UserTripCard({ trip }) {
   const [photoUrl, setPhotoUrl] = useState("");
   const [loading, setLoading] = useState(true);
-  const API_KEY = "AIzaSyDEYoYidQ4EEVYxliPT9O_VEUW-6yxjeSE";
+  const API_KEY = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
 
   useEffect(() => {
     trip && GetPlacePhoto();
