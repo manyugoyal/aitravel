@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button } from "../../components/ui/button";
-import { MdOutlineSend, MdLocationOn } from "react-icons/md";
+import { Popover, PopoverContent, PopoverTrigger } from "../../components/ui/popover";
+import { MdOutlineSend, MdLocationOn, MdContentCopy, MdEmail } from "react-icons/md";
 import { IoMdCalendar } from "react-icons/io";
-import { FaWallet, FaUserFriends } from "react-icons/fa";
+import { FaWallet, FaUserFriends, FaWhatsapp, FaTwitter, FaFacebook } from "react-icons/fa";
 import axios from "axios";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 function InfoSection({ trip }) {
   const [photos, setPhotos] = useState([]);
@@ -90,6 +92,49 @@ function InfoSection({ trip }) {
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 },
+  };
+
+  const shareUrl = window.location.href;
+  const shareText = `Check out my ${trip?.userSelection?.noOfDays}-day trip to ${trip?.userSelection?.place?.label}!`;
+
+  const shareTargets = [
+    {
+      name: "WhatsApp",
+      icon: FaWhatsapp,
+      color: "text-green-500",
+      href: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
+    },
+    {
+      name: "Twitter",
+      icon: FaTwitter,
+      color: "text-sky-500",
+      href: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "Facebook",
+      icon: FaFacebook,
+      color: "text-blue-600",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+    },
+    {
+      name: "Email",
+      icon: MdEmail,
+      color: "text-gray-600",
+      href: `mailto:?subject=${encodeURIComponent(shareText)}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`,
+    },
+  ];
+
+  const openShareTarget = (href) => {
+    window.open(href, "_blank", "noopener,noreferrer");
+  };
+
+  const copyShareLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast("Link copied to clipboard!");
+    } catch (error) {
+      toast("Couldn't copy the link. Please copy it manually.");
+    }
   };
 
   return (
@@ -179,11 +224,39 @@ function InfoSection({ trip }) {
               {trip?.userSelection?.place?.label}
             </h2>
 
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Button className='rounded-full p-3 h-12 w-12'>
-                <MdOutlineSend className='text-xl' />
-              </Button>
-            </motion.div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button className='rounded-full p-3 h-12 w-12' aria-label='Share this trip'>
+                    <MdOutlineSend className='text-xl' />
+                  </Button>
+                </motion.div>
+              </PopoverTrigger>
+              <PopoverContent className='w-64' align='end'>
+                <p className='font-semibold text-sm text-gray-700 mb-3'>Share this trip</p>
+                <div className='grid grid-cols-4 gap-3 mb-3'>
+                  {shareTargets.map(({ name, icon: Icon, color, href }) => (
+                    <button
+                      key={name}
+                      onClick={() => openShareTarget(href)}
+                      className='flex flex-col items-center gap-1 group'
+                      aria-label={`Share via ${name}`}
+                    >
+                      <span className='h-11 w-11 rounded-full bg-gray-100 flex items-center justify-center group-hover:bg-gray-200 transition'>
+                        <Icon className={`text-xl ${color}`} />
+                      </span>
+                      <span className='text-[11px] text-gray-500'>{name}</span>
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={copyShareLink}
+                  className='w-full flex items-center justify-center gap-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg py-2 transition'
+                >
+                  <MdContentCopy /> Copy Link
+                </button>
+              </PopoverContent>
+            </Popover>
           </motion.div>
 
           <motion.div className='mt-2 flex flex-wrap gap-3' variants={fadeIn}>

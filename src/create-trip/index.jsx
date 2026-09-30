@@ -1,11 +1,12 @@
 
 import { AI_PROMPTS, SelectBudgetOptions, SelectTravelsList } from "../constants/option";
 import { Input } from "../components/ui/input";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import { chatSession } from "../service/AIModel";
+import { GetPlaceSuggestions } from "../service/GlobalApi";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../components/ui/dialog";
 import { Button } from "../components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
@@ -26,6 +27,8 @@ function CreateTrip() {
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const navigate = useNavigate();
+  const debounceRef = useRef(null);
+  const requestIdRef = useRef(0);
 
   const handleInputChange = (name, value) => {
     setFormData((prev) => ({
@@ -34,26 +37,30 @@ function CreateTrip() {
     }));
   };
 
-  const searchLocation = async (value) => {
+  // Debounced Google Places autocomplete. Previously this hit OpenStreetMap's
+  // Nominatim on every keystroke, which tripped Nominatim's shared-IP rate
+  // limit mid-demo (a 429 with no CORS header, which the browser reports as
+  // a CORS error). A billed Google Places key doesn't have that failure mode.
+  const searchLocation = (value) => {
     setQuery(value);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
 
     if (value.length < 3) {
       setSuggestions([]);
       return;
     }
 
-    try {
-      const res = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          value
-        )}`
-      );
-
-      const data = await res.json();
-      setSuggestions(data);
-    } catch (err) {
-      console.error(err);
-    }
+    debounceRef.current = setTimeout(async () => {
+      const thisRequestId = ++requestIdRef.current;
+      try {
+        const results = await GetPlaceSuggestions(value);
+        // Ignore stale responses if the user kept typing.
+        if (thisRequestId === requestIdRef.current) setSuggestions(results);
+      } catch (err) {
+        console.error(err);
+      }
+    }, 400);
   };
 
   const login = useGoogleLogin({
@@ -261,21 +268,20 @@ function CreateTrip() {
                     <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
                       {suggestions.map((place) => (
                         <div
-                          key={place.place_id}
+                          key={place.placeId}
                           className="p-3 hover:bg-gray-100 cursor-pointer"
                           onClick={() => {
-                            setQuery(place.display_name);
+                            setQuery(place.description);
 
                             handleInputChange("place", {
-                              label: place.display_name,
-                              lat: place.lat,
-                              lon: place.lon,
+                              label: place.description,
+                              placeId: place.placeId,
                             });
 
                             setSuggestions([]);
                           }}
                         >
-                          {place.display_name}
+                          {place.description}
                         </div>
                       ))}
                     </div>
